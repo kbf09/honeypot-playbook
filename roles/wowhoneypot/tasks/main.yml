@@ -1,0 +1,5 @@
+- name: git clone wowhoneypot
+  git: 
+    repo: "https://github.com/morihisa/WOWHoneypot"
+    clone: yes
+    dest: 

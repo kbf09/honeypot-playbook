@@ -1,3 +1,2 @@
----
-# file: site.yml
-#
+- include: honeypot.yml
+- include: system.yml

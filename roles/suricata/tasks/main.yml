@@ -1,0 +1,36 @@
+---
+- name: add suricata repo
+  apt_repository: 
+    repo: ppa:oisf/suricata-stable
+
+- name: install suricata
+  apt: 
+    name: suricata
+    state: latest
+    
+- name: copy suricata config file
+  template:
+      dest: /etc/suricata/suricata.conf
+      src: ../templates/suricata.yaml.j2
+      owner: root
+      group: root 
+      mode: '777'
+
+- name: install pip
+  apt:
+    name: python-pip
+    state: latest
+
+- name: install suricata-update
+  pip: 
+    name: suricata-update
+    extra_args: --upgrade
+
+- name: exec suricata-update
+  shell: suricata-update
+
+- name: restart suricata
+  systemd: 
+    name: suricata
+    enable: true
+    state: restarted

@@ -1,0 +1,1 @@
+ ansible-playbook -k -i inventory honeypot.yml -u bira -K
