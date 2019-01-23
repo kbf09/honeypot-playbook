@@ -1,0 +1,58 @@
+- name: install git
+  apt:
+    name: git
+    state: latest
+
+- name: git clone dionaea
+  git: 
+    repo: "https://github.com/DinoTools/dionaea.git"
+    clone: yes
+    dest: "/tmp/dionaea"
+
+- name: install dependencies
+  apt: 
+    name: "{{ packeages }}"
+    state: latest
+  vars:
+    packeages:
+      - build-essential 
+      - cmake 
+      - check 
+      - cython3 
+      - libcurl4-openssl-dev 
+      - libemu-dev 
+      - libev-dev 
+      - libglib2.0-dev 
+      - libloudmouth1-dev 
+      - libnetfilter-queue-dev 
+      - libnl-3-dev 
+      - libpcap-dev 
+      - libssl-dev 
+      - libtool 
+      - libudns-dev 
+      - python3 
+      - python3-dev 
+      - python3-bson 
+      - python3-yaml
+    
+
+- name: mkdir build
+  shell: mkdir /tmp/dionaea/build
+
+- name: build
+  shell: cmake -DCMAKE_INSTALL_PREFIX:PATH=/opt/dionaea .. && make && make install
+  args:
+    chdir: /tmp/dionaea/build
+
+- name: move log_json
+  shell: "mv /opt/dionaea/etc/dionaea/ihandlers-available/log_json.yaml /opt/dionaea/etc/dionaea/ihandlers-enabled/log_json.yaml"
+
+- name: copy dionaea service file
+  template:
+      dest: /opt/dionaea/etc/dionaea/dionaea.cfg
+      src: ../templates/dionaea.cfg.j2
+
+- name: copy dionaea service file
+  template:
+      dest: /etc/systemd/system/dionaea.service
+      src: ../templates/dionaea.service.j2

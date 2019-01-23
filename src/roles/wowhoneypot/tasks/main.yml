@@ -1,0 +1,27 @@
+- name: install git
+  apt:
+    name: git
+    state: latest
+
+- name: git clone wowhoneypot
+  git: 
+    repo: "https://github.com/morihisa/WOWHoneypot"
+    clone: yes
+    dest: "/opt/wowhoneypot"
+
+- name: copy wowhoneypot service file
+  template:
+      dest: /etc/systemd/system/wowhoneypot.service
+      src: ../templates/wowhoneypot.service.j2
+
+- name: copy wowhoneypot service file
+  template:
+      dest: /opt/wowhoneypot/start.sh
+      src: ../templates/start.sh
+
+- name: start wowhoneypot
+  systemd: 
+    name: wowhoneypot
+    enabled: yes
+    daemon_reload: yes
+    state: started

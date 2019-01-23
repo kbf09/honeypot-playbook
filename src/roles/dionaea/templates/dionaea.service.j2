@@ -1,0 +1,12 @@
+[Unit]
+Description=dionaea
+
+[Service]
+ExecStart = /opt/dionaea/bin/dionaea -u dionaea -g dionaea
+ExecRestart = /bin/kill -WINCH ${MAINPID} ; /opt/dionaea/bin/dionaea -u dionaea -g dionaea
+ExecStop = /bin/kill -WINCH ${MAINPID}
+Restart = no
+Type = simple
+
+[Install]
+WantedBy = multi-user.target
